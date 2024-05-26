@@ -1,6 +1,7 @@
 import time
 from typing import Union
 
+from input import Input
 from sensor import PressureSensor
 
 
@@ -13,10 +14,14 @@ def calculate_elevation(
 class ElevationTracker:
     sensor: PressureSensor
 
+    input: Input
+
     pressure0_hpa: Union[int, float]
 
     def __init__(self) -> None:
         self.sensor = PressureSensor()
+
+        self.input = Input()
 
         self.pressure0_hpa = self.sensor.read()
 
@@ -25,6 +30,9 @@ class ElevationTracker:
 
     def reset_pressure0(self) -> None:
         self.pressure0_hpa = self.sensor.read()
+
+    def read_gpio(self) -> None:
+        pass
 
     def run(self) -> None:
         itr = 0
@@ -37,6 +45,10 @@ class ElevationTracker:
             pressure = self.get_pressure()
 
             print("pressure", pressure)
+
+            reset_state = self.input.check_reset_button()
+
+            print("reset_state", reset_state)
 
             time.sleep(1)
 
